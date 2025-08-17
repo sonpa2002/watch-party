@@ -1,334 +1,81 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ở đây có thuyết minh — Watch Party</title>
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-  <style>
-    body { background:#111; color:#fff; font-family:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
-    .container { max-width: 950px; margin: 18px auto; padding: 0 12px; }
-    .topbar { display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
-    .pill { padding:6px 10px; border:1px solid #333; border-radius:999px; background:#191919; }
-    .grid { display:grid; grid-template-columns: 1fr; gap:12px; }
-    @media (min-width: 980px){ .grid{ grid-template-columns: 2fr 1fr; } }
-    button { margin:4px; padding:6px 12px; border-radius:10px; border:1px solid #333; background:#1a1a1a; color:#fff; cursor:pointer; }
-    button:hover { background:#222; }
-    .FlashActive { background:#e67e22; border-color:#e67e22; }
-    .MovieName { margin:12px 4px 4px; font-weight:700; opacity:.9; }
-    .LoadingMovie { margin:8px 4px 12px; opacity:.8; }
-    textarea { width:100%; min-height:110px; background:#0b0d12; color:#e5e7eb; border:1px solid #2a2f3a; border-radius:10px; padding:8px; }
-    .card { background:#171a21; border:1px solid #222; border-radius:14px; padding:10px; }
-    .status { font-size:12px; opacity:.8; }
-  </style>
+  <meta charset="utf-8">
+  <title>Watch Party Demo</title>
 </head>
 <body>
-  <div class="container">
-    <div class="topbar">
-      <span class="pill">Chế độ:</span>
-      <label><input type="radio" name="mode" value="host" checked> Host</label>
-      <label><input type="radio" name="mode" value="guest"> Guest</label>
-      <span class="status">Kết nối: <span id="connState">chưa bắt đầu</span></span>
-    </div>
+  <h3>Mode</h3>
+  <label><input type="radio" name="mode" value="host" checked> Host</label>
+  <label><input type="radio" name="mode" value="guest"> Guest</label>
+  <p>Conn: <span id="state">...</span></p>
 
-    <div class="grid">
-      <div>
-        <div id="video-container">
-          <video id="player" controls playsinline></video>
-        </div>
-        <div class="LoadingMovie" id="isLoad">Đang phát: Nhấn vào tập phim phía dưới để phát Video</div>
+  <video id="vid" controls width="400" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
 
-        <div class="MovieName">Thêm Một Lần Yêu : Love, Take Two</div>
-        <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 1">Tập 1</button>
-        <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 2">Tập 2</button>
-        <button data-src="https://vz-aba01433-e5e.b-cdn.net/97e3a549-cd0e-48ad-8b1b-aa37a5ceca2b/playlist.m3u8" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 3">Tập 3</button>
-        <button data-src="https://vz-aba01433-e5e.b-cdn.net/cafeea4d-6dbf-43b1-a23b-3c09b8fefe96/playlist.m3u8" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 4">Tập 4</button>
+  <h3>Step 1: Local SDP</h3>
+  <textarea id="local" style="width:100%;height:100px"></textarea><br>
+  <button id="btnOffer">Tạo Offer</button>
+  <button id="btnAnswer">Tạo Answer</button>
 
-        <div class="MovieName">Nghịch Ái</div>
-        <button data-src="https://vz-aba01433-e5e.b-cdn.net/0e73caea-fc94-41c8-9c6b-b04ea35f3d1d/playlist.m3u8" data-sub="Track/NghichAi/Tap21.vtt" data-title="Nghịch Ái - Tập 21">Tập 21</button>
-        <button data-src="https://vz-aba01433-e5e.b-cdn.net/5bfd9570-39bb-4c87-82e7-c01ac1599d0c/playlist.m3u8" data-sub="Track/NghichAi/Tap22.vtt" data-title="Nghịch Ái - Tập 22">Tập 22</button>
-        <button data-src="https://vz-aba01433-e5e.b-cdn.net/6fd3165a-17f5-473b-b47b-eb28eea75de9/playlist.m3u8" data-sub="Track/NghichAi/Tap23.vtt" data-title="Nghịch Ái - Tập 23">Tập 23</button>
-        <button data-src="https://vz-aba01433-e5e.b-cdn.net/d2e1aba3-7c70-4a54-b06a-bd983742580b/playlist.m3u8" data-sub="Track/NghichAi/Tap24.vtt" data-title="Nghịch Ái - Tập 24">Tập 24</button>
-      </div>
+  <h3>Step 2: Remote SDP</h3>
+  <textarea id="remote" style="width:100%;height:100px"></textarea><br>
+  <button id="btnSetRemote">Set Remote</button>
 
-      <div>
-        <div class="card">
-          <h3>Bước 1: Offer/Answer của bạn</h3>
-          <textarea id="localSdp" placeholder="Offer/Answer của bạn sẽ xuất hiện ở đây"></textarea>
-          <div>
-            <button id="btnCreateOffer">Tạo Offer (Host)</button>
-            <button id="btnCreateAnswer">Tạo Answer (Guest)</button>
-            <button id="btnCopyLocal">Copy của tôi</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Bước 2: Dán Offer/Answer từ peer</h3>
-          <textarea id="remoteSdp" placeholder="Dán Offer/Answer nhận từ người kia ở đây"></textarea>
-          <div>
-            <button id="btnSetRemote">Set Remote</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<script>
+const pc = new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"}]});
+const state = document.getElementById("state");
+const vid = document.getElementById("vid");
 
-  <!-- Plyr + HLS.js -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-  <script>
-    // ---------- Plyr + HLS ----------
-    const titleDisplay = document.getElementById('isLoad');
-    const buttons = document.querySelectorAll('button[data-src]');
-    const videoContainer = document.getElementById('video-container');
+let dc; // datachannel
+let applying = false;
 
-    let hls, player, TileVideo;
-    function CaptionsChange(){
-      const videoTagInfo = document.getElementById("player");
-      const rect = videoTagInfo.getBoundingClientRect();
-      const captions = document.querySelector('.plyr__captions');
-      if (captions) {
-        captions.style.setProperty('bottom', `calc(50% - ${(rect.width/TileVideo)/2.42}px)`, 'important');
-        captions.style.setProperty('font-size', `${rect.width/36}px`, 'important');
-        captions.style.setProperty('line-height', `${rect.width/32}px`, 'important');
-      }
-    }
+pc.onconnectionstatechange = ()=> state.textContent = pc.connectionState;
+pc.oniceconnectionstatechange = ()=> state.textContent = pc.iceConnectionState;
 
-    function playVideo(src, title, subSrc) {
-      if (hls) hls.destroy();
-      if (player) player.destroy();
+// Nếu là Host thì tạo channel
+function ensureChannel(){
+  if (!dc){
+    dc = pc.createDataChannel("sync");
+    hookDC();
+  }
+}
+pc.ondatachannel = e => { dc = e.channel; hookDC(); };
 
-      const subtitleTrack = subSrc
-        ? `<track kind="subtitles" label="Tiếng Việt" srclang="vi" src="${subSrc}">`
-        : '';
+function hookDC(){
+  dc.onopen = ()=> console.log("DC open");
+  dc.onmessage = e=>{
+    const msg = JSON.parse(e.data);
+    applying = true;
+    if (msg.t=="play") { vid.currentTime=msg.time; vid.play(); }
+    if (msg.t=="pause"){ vid.currentTime=msg.time; vid.pause(); }
+    if (msg.t=="seek") { vid.currentTime=msg.time; }
+    applying = false;
+  };
+}
+function send(msg){ if (dc?.readyState==="open") dc.send(JSON.stringify(msg)); }
 
-      videoContainer.innerHTML = `
-        <video id="player" controls playsinline>
-          ${subtitleTrack}
-        </video>
-      `;
-      const el = document.getElementById('player');
+vid.addEventListener("play",()=>{ if(!applying) send({t:"play",time:vid.currentTime}); });
+vid.addEventListener("pause",()=>{ if(!applying) send({t:"pause",time:vid.currentTime}); });
+vid.addEventListener("seeked",()=>{ if(!applying) send({t:"seek",time:vid.currentTime}); });
 
-      hls = new Hls();
-      hls.loadSource(src);
-      hls.attachMedia(el);
+const local = document.getElementById("local");
+const remote = document.getElementById("remote");
 
-      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-        const availableQualities = data.levels.map((level, index) => ({
-          label: `${level.height}p`,
-          value: index
-        })).reverse();
-        availableQualities.unshift({ label: 'Auto', value: -1 });
-
-        player = new Plyr(el, {
-          controls: [
-            'play-large', 'rewind', 'play', 'fast-forward',
-            'progress', 'current-time', 'duration',
-            'mute', 'volume', 'captions', 'settings', 'fullscreen'
-          ],
-          quality: {
-            default: -1,
-            options: availableQualities.map(q => q.value),
-            forced: true,
-            onChange: (newQuality) => {
-              hls.currentLevel = newQuality;
-            }
-          },
-          i18n: {
-            qualityLabel: {
-              '-1': 'Auto',
-              ...Object.fromEntries(availableQualities.map(q => [q.value, q.label]))
-            }
-          },
-          captions: { active: true, update: true }
-        });
-
-        // auto bật nút captions nếu đang off
-        const btnCap = document.querySelector('button.plyr__control[data-plyr="captions"]');
-        if (btnCap && btnCap.getAttribute('aria-pressed') === 'false') btnCap.click();
-
-        TileVideo = data.levels[0].width / data.levels[0].height;
-        CaptionsChange();
-
-        // Gắn hook sync sau khi có player
-        hookPlayerSyncEvents();
-        player.play();
-      });
-
-      titleDisplay.textContent = `Đang phát: ${title}`;
-    }
-
-    window.addEventListener("resize", CaptionsChange);
-
-    // ---------- WebRTC (P2P, manual signaling) ----------
-    const connStateEl = document.getElementById('connState');
-    const setConnState = (t)=> connStateEl.textContent = t;
-
-    const pc = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-    });
-
-    let dc = pc.createDataChannel('sync'); // Host tạo trước; Guest sẽ nhận ở ondatachannel
-    let isRemoteApplying = false;
-    let lastHeartbeat = 0;
-
-    pc.oniceconnectionstatechange = ()=> setConnState(pc.iceConnectionState);
-    pc.onconnectionstatechange = ()=> setConnState(pc.connectionState);
-
-    pc.ondatachannel = (e)=>{
-      dc = e.channel;
-      setupDC();
-    };
-    setupDC();
-
-    function setupDC(){
-      if (!dc) return;
-      dc.onopen = ()=> {
-        // gửi trạng thái hiện tại cho peer mới kết nối
-        if (dc.readyState === 'open') sendState();
-      };
-      dc.onmessage = (e)=>{
-        try { handleMsg(JSON.parse(e.data)); }
-        catch { /* ignore */ }
-      };
-    }
-
-    function send(msg){
-      if (dc && dc.readyState === 'open') dc.send(JSON.stringify(msg));
-    }
-
-    // ---------- Sync: share src/sub/title + play/pause/seek ----------
-    function broadcastLoad(src, title, sub){
-      send({ t:'load', src, title, sub });
-      // gửi state ngay sau khi load để peer đồng bộ time
-      setTimeout(()=> sendState(), 300);
-    }
-
-    function sendState(){
-      if (!player) return;
-      send({ t:'state', paused: player.paused, time: player.currentTime });
-    }
-
-    function hookPlayerSyncEvents(){
-      // tránh đăng ký nhiều lần khi load tập mới
-      if (!player || player.__hooked) return;
-      player.__hooked = true;
-
-      player.on('play', ()=> {
-        if (isRemoteApplying) return;
-        send({ t:'play', time: player.currentTime });
-      });
-      player.on('pause', ()=> {
-        if (isRemoteApplying) return;
-        send({ t:'pause', time: player.currentTime });
-      });
-      player.on('seeked', ()=> {
-        if (isRemoteApplying) return;
-        send({ t:'seek', time: player.currentTime });
-      });
-      player.on('timeupdate', ()=>{
-        const now = Date.now();
-        if (now - lastHeartbeat > 3000) {
-          lastHeartbeat = now;
-          if (!isRemoteApplying) send({ t:'tick', time: player.currentTime, paused: player.paused });
-        }
-      });
-    }
-
-    function softSeek(target){
-      if (!player || typeof target !== 'number') return;
-      const drift = Math.abs(player.currentTime - target);
-      if (drift > 0.5) player.currentTime = target;
-    }
-
-    function handleMsg(msg){
-      // t: type
-      if (msg.t === 'load'){
-        // chỉ tải khi khác nguồn
-        const currentTrack = document.querySelector('#player track')?.getAttribute('src') || '';
-        if (msg.src){
-          const sameSrc = !!hls && hls.url && hls.url === msg.src;
-          if (!sameSrc || currentTrack !== (msg.sub || '')) {
-            playVideo(msg.src, msg.title || '', msg.sub || '');
-          }
-        }
-        return;
-      }
-      if (!player) return;
-
-      isRemoteApplying = true;
-      try {
-        if (msg.t === 'play'){ softSeek(msg.time); player.play(); }
-        else if (msg.t === 'pause'){ softSeek(msg.time); player.pause(); }
-        else if (msg.t === 'seek'){ softSeek(msg.time); }
-        else if (msg.t === 'state'){
-          // nhận state tổng: set pause/play + time
-          if (msg.paused) { softSeek(msg.time); player.pause(); }
-          else { softSeek(msg.time); player.play(); }
-        } else if (msg.t === 'tick'){
-          // nhịp đồng bộ nhẹ nhàng
-          softSeek(msg.time);
-          if (msg.paused && !player.paused) player.pause();
-          if (!msg.paused && player.paused) player.play();
-        }
-      } finally {
-        isRemoteApplying = false;
-      }
-    }
-
-    // ---------- UI: chọn tập + phát & broadcast ----------
-    const modeRadio = document.querySelectorAll('input[name="mode"]');
-    const isHost = () => document.querySelector('input[name="mode"]:checked').value === 'host';
-
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        const src = button.getAttribute('data-src');
-        const title = button.getAttribute('data-title');
-        const sub = button.getAttribute('data-sub');
-
-        if (!src){
-          alert('Video chưa được cập nhật!\nVui lòng liên hệ Tiktok: @odaycothuyetminh để được hỗ trợ');
-          return;
-        }
-        buttons.forEach(btn => btn.classList.remove('FlashActive'));
-        button.classList.add('FlashActive');
-
-        // Host phát & broadcast tập
-        playVideo(src, title, sub);
-        if (isHost()) broadcastLoad(src, title, sub);
-      });
-    });
-
-    // ---------- Signaling thủ công ----------
-    const $ = (id)=> document.getElementById(id);
-    const localSdp = $('localSdp');
-    const remoteSdp = $('remoteSdp');
-
-    $('btnCreateOffer').onclick = async ()=>{
-      // nếu là Host, đảm bảo có DataChannel (đã tạo ở trên)
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-      localSdp.value = JSON.stringify(pc.localDescription);
-    };
-
-    $('btnCreateAnswer').onclick = async ()=>{
-      // Guest: phải setRemote trước (Offer của Host)
-      const remote = tryParse(remoteSdp.value);
-      if (!remote) return alert('Hãy dán Offer vào ô dưới rồi bấm Set Remote trước!');
-      // Nếu đã set rồi thì tạo Answer
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      localSdp.value = JSON.stringify(pc.localDescription);
-    };
-
-    $('btnSetRemote').onclick = async ()=>{
-      const desc = tryParse(remoteSdp.value);
-      if (!desc) return alert('JSON không hợp lệ');
-      await pc.setRemoteDescription(desc);
-    };
-
-    $('btnCopyLocal').onclick = ()=> navigator.clipboard.writeText(localSdp.value || '');
-
-    function tryParse(s){ try{ return JSON.parse(s) }catch{ return null } }
-  </script>
+btnOffer.onclick = async ()=>{
+  ensureChannel();
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  local.value = JSON.stringify(pc.localDescription);
+};
+btnAnswer.onclick = async ()=>{
+  const answer = await pc.createAnswer();
+  await pc.setLocalDescription(answer);
+  local.value = JSON.stringify(pc.localDescription);
+};
+btnSetRemote.onclick = async ()=>{
+  const desc = JSON.parse(remote.value);
+  await pc.setRemoteDescription(desc);
+};
+</script>
 </body>
 </html>
