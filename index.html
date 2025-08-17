@@ -38,6 +38,8 @@
           <video id="player" controls playsinline></video>
         </div>
         <div class="LoadingMovie" id="isLoad">Đang phát: Nhấn vào tập phim phía dưới để phát Video</div>
+        <button id="btnToggleMic">🎤 Bật Mic</button>
+        <audio id="remoteAudio" autoplay></audio>
 
         <div class="MovieName">Thêm Một Lần Yêu : Love, Take Two</div>
         <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 1">Tập 1</button>
@@ -78,6 +80,43 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
+    let micStream = null;
+let micTrack = null;
+let isMicOn = false;
+
+async function initMic() {
+  if (!micStream) {
+    try {
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      micTrack = micStream.getTracks()[0];
+      pc.addTrack(micTrack, micStream); // gửi voice lên peer
+    } catch (err) {
+      alert("Không thể mở micro: " + err);
+    }
+  }
+}
+
+document.getElementById("btnToggleMic").onclick = async () => {
+  if (!isMicOn) {
+    await initMic();
+    if (micTrack) micTrack.enabled = true;
+    isMicOn = true;
+    btnToggleMic.textContent = "🔇 Tắt Mic";
+  } else {
+    if (micTrack) micTrack.enabled = false;
+    isMicOn = false;
+    btnToggleMic.textContent = "🎤 Bật Mic";
+  }
+};
+
+// nhận audio từ peer
+pc.ontrack = (event) => {
+  const audioEl = document.getElementById("remoteAudio");
+  if (audioEl.srcObject !== event.streams[0]) {
+    audioEl.srcObject = event.streams[0];
+  }
+};
+
     // ---------- Plyr + HLS ----------
     const titleDisplay = document.getElementById('isLoad');
     const buttons = document.querySelectorAll('button[data-src]');
