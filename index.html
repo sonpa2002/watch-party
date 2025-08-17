@@ -30,6 +30,8 @@
       <label><input type="radio" name="mode" value="host" checked> Host</label>
       <label><input type="radio" name="mode" value="guest"> Guest</label>
       <span class="status">Kết nối: <span id="connState">chưa bắt đầu</span></span>
+      <!-- Nút bật/tắt mic -->
+      <button id="btnToggleMic">🎤 Bật Mic</button>
     </div>
 
     <div class="grid">
@@ -38,8 +40,6 @@
           <video id="player" controls playsinline></video>
         </div>
         <div class="LoadingMovie" id="isLoad">Đang phát: Nhấn vào tập phim phía dưới để phát Video</div>
-        <button id="btnToggleMic">🎤 Bật Mic</button>
-        <audio id="remoteAudio" autoplay></audio>
 
         <div class="MovieName">Thêm Một Lần Yêu : Love, Take Two</div>
         <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 1">Tập 1</button>
@@ -72,6 +72,8 @@
             • Guest: paste Offer của Host → (2) → bấm (3) → copy Answer trả Host.
           </p>
         </div>
+        <!-- Audio phát giọng từ peer -->
+        <audio id="remoteAudio" autoplay></audio>
       </div>
     </div>
   </div>
@@ -80,44 +82,7 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
-    let micStream = null;
-let micTrack = null;
-let isMicOn = false;
-
-async function initMic() {
-  if (!micStream) {
-    try {
-      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      micTrack = micStream.getTracks()[0];
-      pc.addTrack(micTrack, micStream); // gửi voice lên peer
-    } catch (err) {
-      alert("Không thể mở micro: " + err);
-    }
-  }
-}
-
-document.getElementById("btnToggleMic").onclick = async () => {
-  if (!isMicOn) {
-    await initMic();
-    if (micTrack) micTrack.enabled = true;
-    isMicOn = true;
-    btnToggleMic.textContent = "🔇 Tắt Mic";
-  } else {
-    if (micTrack) micTrack.enabled = false;
-    isMicOn = false;
-    btnToggleMic.textContent = "🎤 Bật Mic";
-  }
-};
-
-// nhận audio từ peer
-pc.ontrack = (event) => {
-  const audioEl = document.getElementById("remoteAudio");
-  if (audioEl.srcObject !== event.streams[0]) {
-    audioEl.srcObject = event.streams[0];
-  }
-};
-
-    // ---------- Plyr + HLS ----------
+    // ---------- Plyr + HLS (giữ nguyên code của bạn) ----------
     const titleDisplay = document.getElementById('isLoad');
     const buttons = document.querySelectorAll('button[data-src]');
     const videoContainer = document.getElementById('video-container');
@@ -212,6 +177,14 @@ pc.ontrack = (event) => {
       pc.oniceconnectionstatechange = ()=> setConnState(pc.iceConnectionState);
       pc.onconnectionstatechange = ()=> setConnState(pc.connectionState);
       pc.ondatachannel = (e)=> { dc = e.channel; setupDC(); };
+
+      // Nhận audio từ peer
+      pc.ontrack = (event) => {
+        const audioEl = document.getElementById("remoteAudio");
+        if (audioEl.srcObject !== event.streams[0]) {
+          audioEl.srcObject = event.streams[0];
+        }
+      };
 
       // Host TẠO datachannel, Guest KHÔNG tạo
       if (mode()==='host'){
@@ -340,7 +313,6 @@ pc.ontrack = (event) => {
 
     $('btnCreateLocal').onclick = async ()=>{
       if (mode() !== 'host') { alert('Nút này dành cho Host.'); return; }
-      // Host tạo Offer + chờ ICE complete
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
       await waitIceComplete();
@@ -351,11 +323,8 @@ pc.ontrack = (event) => {
       const desc = tryParse(remoteSdp.value);
       if (!desc) return alert('JSON không hợp lệ');
 
-      // Nếu nhận OFFER (Guest nhận Offer, hoặc Host nhận Offer khi bạn nhầm) → setRemote(offer)
       if (desc.type === 'offer'){
-        // Guest flow chuẩn
         await pc.setRemoteDescription(desc);
-        // Tự động tạo Answer cho Guest + chờ ICE complete + hiển thị lên ô Local
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         await waitIceComplete();
@@ -363,7 +332,6 @@ pc.ontrack = (event) => {
         return;
       }
 
-      // Nếu nhận ANSWER → đây là Host nhận Answer
       if (desc.type === 'answer'){
         await pc.setRemoteDescription(desc);
         return;
@@ -373,7 +341,6 @@ pc.ontrack = (event) => {
     };
 
     $('btnMakeAnswer').onclick = async ()=>{
-      // Chỉ Guest mới dùng, và chỉ khi đã setRemote(offer)
       if (mode() !== 'guest') { alert('Nút này dành cho Guest.'); return; }
       if (!pc.remoteDescription || pc.remoteDescription.type !== 'offer'){
         alert('Hãy dán Offer của Host và bấm "Set Remote" trước.');
@@ -388,6 +355,9 @@ pc.ontrack = (event) => {
     $('btnCopyLocal').onclick = ()=> navigator.clipboard.writeText(localSdp.value || '');
 
     function tryParse(s){ try{ return JSON.parse(s) }catch{ return null } }
+
+   
+
   </script>
 </body>
 </html>
