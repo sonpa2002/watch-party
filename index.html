@@ -24,314 +24,299 @@
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="topbar">
-    <span class="pill">Chế độ:</span>
-    <label><input type="radio" name="mode" value="host" checked> Host</label>
-    <label><input type="radio" name="mode" value="guest"> Guest</label>
-    <span class="status">Kết nối: <span id="connState">chưa bắt đầu</span></span>
-  </div>
-
-  <div class="grid">
-    <div>
-      <div id="video-container">
-        <video id="player" controls playsinline></video>
-      </div>
-      <div class="LoadingMovie" id="isLoad">Đang phát: Nhấn vào tập phim phía dưới để phát Video</div>
-      <div class="MovieName">Thêm Một Lần Yêu : Love, Take Two</div>
-      <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 1">Tập 1</button>
-      <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 2">Tập 2</button>
-      <button data-src="https://vz-aba01433-e5e.b-cdn.net/97e3a549-cd0e-48ad-8b1b-aa37a5ceca2b/playlist.m3u8" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 3">Tập 3</button>
-      <button data-src="https://vz-aba01433-e5e.b-cdn.net/cafeea4d-6dbf-43b1-a23b-3c09b8fefe96/playlist.m3u8" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 4">Tập 4</button>
-
-      <div class="MovieName">Nghịch Ái</div>
-      <button data-src="https://vz-aba01433-e5e.b-cdn.net/0e73caea-fc94-41c8-9c6b-b04ea35f3d1d/playlist.m3u8" data-sub="Track/NghichAi/Tap21.vtt" data-title="Nghịch Ái - Tập 21">Tập 21</button>
-      <button data-src="https://vz-aba01433-e5e.b-cdn.net/5bfd9570-39bb-4c87-82e7-c01ac1599d0c/playlist.m3u8" data-sub="Track/NghichAi/Tap22.vtt" data-title="Nghịch Ái - Tập 22">Tập 22</button>
-      <button data-src="https://vz-aba01433-e5e.b-cdn.net/6fd3165a-17f5-473b-b47b-eb28eea75de9/playlist.m3u8" data-sub="Track/NghichAi/Tap23.vtt" data-title="Nghịch Ái - Tập 23">Tập 23</button>
-      <button data-src="https://vz-aba01433-e5e.b-cdn.net/d2e1aba3-7c70-4a54-b06a-bd983742580b/playlist.m3u8" data-sub="Track/NghichAi/Tap24.vtt" data-title="Nghịch Ái - Tập 24">Tập 24</button>
+  <div class="container">
+    <div class="topbar">
+      <span class="pill">Chế độ:</span>
+      <label><input type="radio" name="mode" value="host" checked> Host</label>
+      <label><input type="radio" name="mode" value="guest"> Guest</label>
+      <span class="status">Kết nối: <span id="connState">chưa bắt đầu</span></span>
     </div>
 
-    <div>
-      <div class="card">
-        <h3>Kết nối P2P (không server)</h3>
-        <div class="row">
-          <button id="btnCreateLocal">1) Tạo Offer (Host)</button>
-          <button id="btnCopyLocal">Copy</button>
+    <div class="grid">
+      <div>
+        <div id="video-container">
+          <video id="player" controls playsinline></video>
         </div>
-        <textarea id="localSdp" placeholder="Offer/Answer của bạn sẽ xuất hiện ở đây"></textarea>
-        <div class="row" style="margin-top:8px">
-          <button id="btnSetRemote">2) Set Remote</button>
-          <button id="btnMakeAnswer">3) Tạo Answer (Guest)</button>
-        </div>
-        <textarea id="remoteSdp" placeholder="Dán Offer/Answer người kia vào đây"></textarea>
+        <div class="LoadingMovie" id="isLoad">Đang phát: Nhấn vào tập phim phía dưới để phát Video</div>
 
-        <!-- Nút bật tắt micro -->
-        <div class="row" style="margin-top:12px">
-          <button id="btnToggleMic">🎤 Bật/Tắt micro</button>
-        </div>
+        <div class="MovieName">Thêm Một Lần Yêu : Love, Take Two</div>
+        <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 1">Tập 1</button>
+        <button data-src="" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 2">Tập 2</button>
+        <button data-src="https://vz-aba01433-e5e.b-cdn.net/97e3a549-cd0e-48ad-8b1b-aa37a5ceca2b/playlist.m3u8" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 3">Tập 3</button>
+        <button data-src="https://vz-aba01433-e5e.b-cdn.net/cafeea4d-6dbf-43b1-a23b-3c09b8fefe96/playlist.m3u8" data-sub="" data-title="Thêm Một Lần Yêu : Love, Take Two - Tập 4">Tập 4</button>
 
-        <p class="status">
-          • Host: bấm (1) → copy → gửi cho Guest. Sau đó paste Answer của Guest → (2).<br>
-          • Guest: paste Offer của Host → (2) → bấm (3) → copy Answer trả Host. 
-        </p>
+        <div class="MovieName">Nghịch Ái</div>
+        <button data-src="https://vz-aba01433-e5e.b-cdn.net/0e73caea-fc94-41c8-9c6b-b04ea35f3d1d/playlist.m3u8" data-sub="Track/NghichAi/Tap21.vtt" data-title="Nghịch Ái - Tập 21">Tập 21</button>
+        <button data-src="https://vz-aba01433-e5e.b-cdn.net/5bfd9570-39bb-4c87-82e7-c01ac1599d0c/playlist.m3u8" data-sub="Track/NghichAi/Tap22.vtt" data-title="Nghịch Ái - Tập 22">Tập 22</button>
+        <button data-src="https://vz-aba01433-e5e.b-cdn.net/6fd3165a-17f5-473b-b47b-eb28eea75de9/playlist.m3u8" data-sub="Track/NghichAi/Tap23.vtt" data-title="Nghịch Ái - Tập 23">Tập 23</button>
+        <button data-src="https://vz-aba01433-e5e.b-cdn.net/d2e1aba3-7c70-4a54-b06a-bd983742580b/playlist.m3u8" data-sub="Track/NghichAi/Tap24.vtt" data-title="Nghịch Ái - Tập 24">Tập 24</button>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Kết nối P2P (không server)</h3>
+          <div class="row">
+            <button id="btnCreateLocal">1) Tạo Offer (Host)</button>
+            <button id="btnCopyLocal">Copy</button>
+          </div>
+          <textarea id="localSdp" placeholder="Offer/Answer của bạn sẽ xuất hiện ở đây"></textarea>
+          <div class="row" style="margin-top:8px">
+            <button id="btnSetRemote">2) Set Remote</button>
+            <button id="btnMakeAnswer">3) Tạo Answer (Guest)</button>
+          </div>
+          <textarea id="remoteSdp" placeholder="Dán Offer/Answer người kia vào đây"></textarea>
+          <p class="status">
+            • Host: bấm (1) → copy → gửi cho Guest. Sau đó paste Answer của Guest → (2).<br>
+            • Guest: paste Offer của Host → (2) → bấm (3) → copy Answer trả Host.
+          </p>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-<script>
-// ---------- Plyr + HLS ----------
-const titleDisplay = document.getElementById('isLoad');
-const buttons = document.querySelectorAll('button[data-src]');
-const videoContainer = document.getElementById('video-container');
-let hls, player, TileVideo;
+  <!-- Plyr + HLS.js -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+  <script>
+    // ---------- Plyr + HLS ----------
+    const titleDisplay = document.getElementById('isLoad');
+    const buttons = document.querySelectorAll('button[data-src]');
+    const videoContainer = document.getElementById('video-container');
+    let hls, player, TileVideo;
 
-function CaptionsChange(){
-  const videoTagInfo = document.getElementById("player");
-  const rect = videoTagInfo.getBoundingClientRect();
-  const captions = document.querySelector('.plyr__captions');
-  if (captions) {
-    captions.style.setProperty('bottom', `calc(50% - ${(rect.width/TileVideo)/2.42}px)`, 'important');
-    captions.style.setProperty('font-size', `${rect.width/36}px`, 'important');
-    captions.style.setProperty('line-height', `${rect.width/32}px`, 'important');
-  }
-}
+    function CaptionsChange(){
+      const videoTagInfo = document.getElementById("player");
+      const rect = videoTagInfo.getBoundingClientRect();
+      const captions = document.querySelector('.plyr__captions');
+      if (captions) {
+        captions.style.setProperty('bottom', `calc(50% - ${(rect.width/TileVideo)/2.42}px)`, 'important');
+        captions.style.setProperty('font-size', `${rect.width/36}px`, 'important');
+        captions.style.setProperty('line-height', `${rect.width/32}px`, 'important');
+      }
+    }
 
-function playVideo(src, title, subSrc) {
-  if (hls) hls.destroy();
-  if (player) player.destroy();
+    function playVideo(src, title, subSrc) {
+      if (hls) hls.destroy();
+      if (player) player.destroy();
 
-  const subtitleTrack = subSrc ? `<track kind="subtitles" label="Tiếng Việt" srclang="vi" src="${subSrc}">` : '';
-  videoContainer.innerHTML = `<video id="player" controls playsinline> ${subtitleTrack} </video>`;
-  const el = document.getElementById('player');
+      const subtitleTrack = subSrc ? `<track kind="subtitles" label="Tiếng Việt" srclang="vi" src="${subSrc}">` : '';
+      videoContainer.innerHTML = `<video id="player" controls playsinline>${subtitleTrack}</video>`;
+      const el = document.getElementById('player');
 
-  hls = new Hls();
-  hls.loadSource(src);
-  hls.attachMedia(el);
+      hls = new Hls();
+      hls.loadSource(src);
+      hls.attachMedia(el);
+      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+        const availableQualities = data.levels.map((level, index) => ({
+          label: `${level.height}p`, value: index
+        })).reverse();
+        availableQualities.unshift({ label: 'Auto', value: -1 });
 
-  hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-    const availableQualities = data.levels.map((level, index) => ({
-      label: `${level.height}p`, value: index
-    })).reverse();
-    availableQualities.unshift({ label: 'Auto', value: -1 });
+        player = new Plyr(el, {
+          controls: [
+            'play-large','rewind','play','fast-forward','progress','current-time','duration',
+            'mute','volume','captions','settings','fullscreen'
+          ],
+          quality: {
+            default: -1,
+            options: availableQualities.map(q => q.value),
+            forced: true,
+            onChange: (newQuality) => { hls.currentLevel = newQuality; }
+          },
+          i18n: {
+            qualityLabel: {
+              '-1': 'Auto',
+              ...Object.fromEntries(availableQualities.map(q => [q.value, q.label]))
+            }
+          },
+          captions: { active: true, update: true }
+        });
 
-    player = new Plyr(el, {
-      controls: [
-        'play-large', 'rewind', 'play', 'fast-forward',
-        'progress', 'current-time', 'duration',
-        'mute', 'volume', 'captions', 'settings', 'fullscreen'
-      ],
-      quality: {
-        default: -1,
-        options: availableQualities.map(q => q.value),
-        forced: true,
-        onChange: (newQuality) => { hls.currentLevel = newQuality; }
-      },
-      i18n: {
-        qualityLabel: {
-          '-1': 'Auto',
-          ...Object.fromEntries(availableQualities.map(q => [q.value, q.label]))
+        const btnCap = document.querySelector('button.plyr__control[data-plyr="captions"]');
+        if (btnCap && btnCap.getAttribute('aria-pressed') === 'false') btnCap.click();
+
+        TileVideo = data.levels[0].width / data.levels[0].height;
+        CaptionsChange();
+        hookPlayerSyncEvents();
+        player.play();
+      });
+
+      titleDisplay.textContent = `Đang phát: ${title}`;
+    }
+
+    window.addEventListener("resize", CaptionsChange);
+
+    // ---------- WebRTC ----------
+    const connStateEl = document.getElementById('connState');
+    const setConnState = (t)=> connStateEl.textContent = t;
+    let pc, dc;
+    let isRemoteApplying = false;
+    let lastHeartbeat = 0;
+    const mode = () => document.querySelector('input[name="mode"]:checked').value;
+
+    function newPeer(){
+      if (pc) { try{pc.close()}catch{} }
+      pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+      pc.oniceconnectionstatechange = ()=> setConnState(pc.iceConnectionState);
+      pc.onconnectionstatechange = ()=> setConnState(pc.connectionState);
+      pc.ondatachannel = (e)=> { dc = e.channel; setupDC(); };
+      if (mode()==='host'){ dc = pc.createDataChannel('sync'); setupDC(); }
+    }
+    newPeer();
+
+    document.querySelectorAll('input[name="mode"]').forEach(r=>{
+      r.addEventListener('change', ()=>{ newPeer(); });
+    });
+
+    function setupDC(){
+      if (!dc) return;
+      dc.onopen = ()=> { if (dc.readyState==='open') sendState(); };
+      dc.onmessage = (e)=>{ try { handleMsg(JSON.parse(e.data)); } catch {} };
+    }
+
+    function send(obj){
+      if (dc && dc.readyState==='open'){ dc.send(JSON.stringify(obj)); }
+    }
+
+    async function waitIceComplete(){
+      if (pc.iceGatheringState === 'complete') return;
+      await new Promise(resolve=>{
+        const to = setTimeout(resolve, 2000);
+        pc.addEventListener('icegatheringstatechange', function onchg(){
+          if (pc.iceGatheringState === 'complete'){
+            pc.removeEventListener('icegatheringstatechange', onchg);
+            clearTimeout(to);
+            resolve();
+          }
+        });
+      });
+    }
+
+    // ---- Sync events ----
+    function broadcastLoad(src, title, sub){
+      send({ t:'load', src, title, sub });
+      setTimeout(()=> sendState(), 350);
+    }
+
+    function sendState(){
+      if (!player) return;
+      send({ t:'state', paused: player.paused, time: player.currentTime });
+    }
+
+    function hookPlayerSyncEvents(){
+      if (!player || player.__hooked) return;
+      player.__hooked = true;
+      player.on('play', ()=> { if (!isRemoteApplying) send({ t:'play', time: player.currentTime }); });
+      player.on('pause', ()=> { if (!isRemoteApplying) send({ t:'pause', time: player.currentTime }); });
+      player.on('seeked', ()=> { if (!isRemoteApplying) send({ t:'seek', time: player.currentTime }); });
+      player.on('timeupdate', ()=>{
+        const now = Date.now();
+        if (now - lastHeartbeat > 3000) {
+          lastHeartbeat = now;
+          if (!isRemoteApplying) send({ t:'tick', time: player.currentTime, paused: player.paused });
         }
-      },
-      captions: { active: true, update: true }
+      });
+    }
+
+    function softSeek(target){
+      if (!player || typeof target !== 'number') return;
+      const drift = Math.abs(player.currentTime - target);
+      if (drift > 0.5) player.currentTime = target;
+    }
+
+    function handleMsg(msg){
+      if (msg.t === 'load'){
+        const currentTrack = document.querySelector('#player track')?.getAttribute('src') || '';
+        if (msg.src){
+          const sameSrc = !!hls && hls.url && hls.url === msg.src;
+          if (!sameSrc || currentTrack !== (msg.sub || '')) {
+            playVideo(msg.src, msg.title || '', msg.sub || '');
+          }
+        }
+        return;
+      }
+      if (!player) return;
+
+      isRemoteApplying = true;
+      try {
+        if (msg.t === 'play'){ softSeek(msg.time); player.play(); }
+        else if (msg.t === 'pause'){ softSeek(msg.time); player.pause(); }
+        else if (msg.t === 'seek'){ softSeek(msg.time); }
+        else if (msg.t === 'state'){
+          if (msg.paused) { softSeek(msg.time); player.pause(); }
+          else { softSeek(msg.time); player.play(); }
+        }
+        else if (msg.t === 'tick'){
+          softSeek(msg.time);
+          if (msg.paused && !player.paused) player.pause();
+          if (!msg.paused && player.paused) player.play();
+        }
+      } finally { isRemoteApplying = false; }
+    }
+
+    // ---- UI: chọn tập ----
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const src = button.getAttribute('data-src');
+        const title = button.getAttribute('data-title');
+        const sub = button.getAttribute('data-sub');
+        if (!src){
+          alert('Video chưa được cập nhật!\nVui lòng liên hệ Tiktok: @odaycothuyetminh để được hỗ trợ');
+          return;
+        }
+        buttons.forEach(btn => btn.classList.remove('FlashActive'));
+        button.classList.add('FlashActive');
+        playVideo(src, title, sub);
+        if (mode()==='host') broadcastLoad(src, title, sub);
+      });
     });
 
-    const btnCap = document.querySelector('button.plyr__control[data-plyr="captions"]');
-    if (btnCap && btnCap.getAttribute('aria-pressed') === 'false') btnCap.click();
+    // ---- Signaling ----
+    const $ = (id)=> document.getElementById(id);
+    const localSdp = $('localSdp');
+    const remoteSdp = $('remoteSdp');
 
-    TileVideo = data.levels[0].width / data.levels[0].height;
-    CaptionsChange();
-    hookPlayerSyncEvents();
-    player.play();
-  });
+    $('btnCreateLocal').onclick = async ()=>{
+      if (mode() !== 'host') { alert('Nút này dành cho Host.'); return; }
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      await waitIceComplete();
+      localSdp.value = JSON.stringify(pc.localDescription);
+    };
 
-  titleDisplay.textContent = `Đang phát: ${title}`;
-}
-window.addEventListener("resize", CaptionsChange);
-
-// ---------- WebRTC ----------
-const connStateEl = document.getElementById('connState');
-const setConnState = (t)=> connStateEl.textContent = t;
-let pc, dc;
-let isRemoteApplying = false;
-let lastHeartbeat = 0;
-let localStream, micEnabled = true;
-const mode = () => document.querySelector('input[name="mode"]:checked').value;
-
-async function initMic() {
-  try {
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
-  } catch (err) {
-    console.error("Không lấy được micro:", err);
-  }
-}
-document.getElementById("btnToggleMic").onclick = () => {
-  if (!localStream) return;
-  micEnabled = !micEnabled;
-  localStream.getAudioTracks().forEach(track => track.enabled = micEnabled);
-};
-
-function newPeer(){
-  if (pc) { try{pc.close()}catch{} }
-  pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-
-  pc.oniceconnectionstatechange = ()=> setConnState(pc.iceConnectionState);
-  pc.onconnectionstatechange = ()=> setConnState(pc.connectionState);
-
-  // Nhận audio từ peer
-  pc.ontrack = (event) => {
-    const audioEl = document.createElement("audio");
-    audioEl.srcObject = event.streams[0];
-    audioEl.autoplay = true;
-    document.body.appendChild(audioEl);
-  };
-
-  pc.ondatachannel = (e)=> { dc = e.channel; setupDC(); };
-  if (mode()==='host'){ dc = pc.createDataChannel('sync'); setupDC(); }
-
-  // xin quyền micro
-  initMic();
-}
-newPeer();
-document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.addEventListener('change', ()=>{ newPeer(); });
-});
-
-function setupDC(){
-  if (!dc) return;
-  dc.onopen = ()=> { if (dc.readyState==='open') sendState(); };
-  dc.onmessage = (e)=>{ try { handleMsg(JSON.parse(e.data)); } catch {} };
-}
-function send(obj){ if (dc && dc.readyState==='open'){ dc.send(JSON.stringify(obj)); } }
-async function waitIceComplete(){
-  if (pc.iceGatheringState === 'complete') return;
-  await new Promise(resolve=>{
-    const to = setTimeout(resolve, 2000);
-    pc.addEventListener('icegatheringstatechange', function onchg(){
-      if (pc.iceGatheringState === 'complete'){
-        pc.removeEventListener('icegatheringstatechange', onchg);
-        clearTimeout(to); resolve();
+    $('btnSetRemote').onclick = async ()=>{
+      const desc = tryParse(remoteSdp.value);
+      if (!desc) return alert('JSON không hợp lệ');
+      if (desc.type === 'offer'){
+        await pc.setRemoteDescription(desc);
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        await waitIceComplete();
+        localSdp.value = JSON.stringify(pc.localDescription);
+        return;
       }
-    });
-  });
-}
-
-// ---- Sync events ----
-function broadcastLoad(src, title, sub){
-  send({ t:'load', src, title, sub });
-  setTimeout(()=> sendState(), 350);
-}
-function sendState(){
-  if (!player) return;
-  send({ t:'state', paused: player.paused, time: player.currentTime });
-}
-function hookPlayerSyncEvents(){
-  if (!player || player.__hooked) return;
-  player.__hooked = true;
-  player.on('play', ()=> { if (!isRemoteApplying) send({ t:'play', time: player.currentTime }); });
-  player.on('pause', ()=> { if (!isRemoteApplying) send({ t:'pause', time: player.currentTime }); });
-  player.on('seeked', ()=> { if (!isRemoteApplying) send({ t:'seek', time: player.currentTime }); });
-  player.on('timeupdate', ()=>{
-    const now = Date.now();
-    if (now - lastHeartbeat > 3000) {
-      lastHeartbeat = now;
-      if (!isRemoteApplying) send({ t:'tick', time: player.currentTime, paused: player.paused });
-    }
-  });
-}
-function softSeek(target){
-  if (!player || typeof target !== 'number') return;
-  const drift = Math.abs(player.currentTime - target);
-  if (drift > 0.5) player.currentTime = target;
-}
-function handleMsg(msg){
-  if (msg.t === 'load'){
-    const currentTrack = document.querySelector('#player track')?.getAttribute('src') || '';
-    if (msg.src){
-      const sameSrc = !!hls && hls.url && hls.url === msg.src;
-      if (!sameSrc || currentTrack !== (msg.sub || '')) {
-        playVideo(msg.src, msg.title || '', msg.sub || '');
+      if (desc.type === 'answer'){
+        await pc.setRemoteDescription(desc);
+        return;
       }
-    }
-    return;
-  }
-  if (!player) return;
-  isRemoteApplying = true;
-  try {
-    if (msg.t === 'play'){ softSeek(msg.time); player.play(); }
-    else if (msg.t === 'pause'){ softSeek(msg.time); player.pause(); }
-    else if (msg.t === 'seek'){ softSeek(msg.time); }
-    else if (msg.t === 'state'){
-      if (msg.paused) { softSeek(msg.time); player.pause(); }
-      else { softSeek(msg.time); player.play(); }
-    }
-    else if (msg.t === 'tick'){
-      softSeek(msg.time);
-      if (msg.paused && !player.paused) player.pause();
-      if (!msg.paused && player.paused) player.play();
-    }
-  } finally { isRemoteApplying = false; }
-}
+      alert('SDP type không hợp lệ: ' + desc.type);
+    };
 
-// ---- UI: chọn tập ----
-buttons.forEach(button => {
-  button.addEventListener('click', () => {
-    const src = button.getAttribute('data-src');
-    const title = button.getAttribute('data-title');
-    const sub = button.getAttribute('data-sub');
-    if (!src){
-      alert('Video chưa được cập nhật!\nVui lòng liên hệ Tiktok: @odaycothuyetminh để được hỗ trợ');
-      return;
-    }
-    buttons.forEach(btn => btn.classList.remove('FlashActive'));
-    button.classList.add('FlashActive');
-    playVideo(src, title, sub);
-    if (mode()==='host') broadcastLoad(src, title, sub);
-  });
-});
+    $('btnMakeAnswer').onclick = async ()=>{
+      if (mode() !== 'guest') { alert('Nút này dành cho Guest.'); return; }
+      if (!pc.remoteDescription || pc.remoteDescription.type !== 'offer'){
+        alert('Hãy dán Offer của Host và bấm "Set Remote" trước.');
+        return;
+      }
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      await waitIceComplete();
+      localSdp.value = JSON.stringify(pc.localDescription);
+    };
 
-// ---- Signaling ----
-const $ = (id)=> document.getElementById(id);
-const localSdp = $('localSdp');
-const remoteSdp = $('remoteSdp');
-$('btnCreateLocal').onclick = async ()=>{
-  if (mode() !== 'host') { alert('Nút này dành cho Host.'); return; }
-  const offer = await pc.createOffer();
-  await pc.setLocalDescription(offer);
-  await waitIceComplete();
-  localSdp.value = JSON.stringify(pc.localDescription);
-};
-$('btnSetRemote').onclick = async ()=>{
-  const desc = tryParse(remoteSdp.value);
-  if (!desc) return alert('JSON không hợp lệ');
-  if (desc.type === 'offer'){
-    await pc.setRemoteDescription(desc);
-    const answer = await pc.createAnswer();
-    await pc.setLocalDescription(answer);
-    await waitIceComplete();
-    localSdp.value = JSON.stringify(pc.localDescription);
-    return;
-  }
-  if (desc.type === 'answer'){ await pc.setRemoteDescription(desc); return; }
-  alert('SDP type không hợp lệ: ' + desc.type);
-};
-$('btnMakeAnswer').onclick = async ()=>{
-  if (mode() !== 'guest') { alert('Nút này dành cho Guest.'); return; }
-  if (!pc.remoteDescription || pc.remoteDescription.type !== 'offer'){
-    alert('Hãy dán Offer của Host và bấm "Set Remote" trước.');
-    return;
-  }
-  const answer = await pc.createAnswer();
-  await pc.setLocalDescription(answer);
-  await waitIceComplete();
-  localSdp.value = JSON.stringify(pc.localDescription);
-};
-$('btnCopyLocal').onclick = ()=> navigator.clipboard.writeText(localSdp.value || '');
-function tryParse(s){ try{ return JSON.parse(s) }catch{ return null } }
-</script>
+    $('btnCopyLocal').onclick = ()=> navigator.clipboard.writeText(localSdp.value || '');
 
+    function tryParse(s){ try{ return JSON.parse(s) }catch{ return null } }
+  </script>
 </body>
 </html>
