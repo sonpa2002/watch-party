@@ -65,6 +65,10 @@
             <button id="btnMakeAnswer">3) Tạo Answer (Guest)</button>
           </div>
           <textarea id="remoteSdp" placeholder="Dán Offer/Answer người kia vào đây"></textarea>
+          <div class="row">
+            <button id="btnStartVoice">Bật Voice Chat</button>
+            <button id="btnStopVoice">Tắt Voice Chat</button>
+          </div>
           <p class="status">
             • Host: bấm (1) → copy → gửi cho Guest. Sau đó paste Answer của Guest → (2).<br>
             • Guest: paste Offer của Host → (2) → bấm (3) → copy Answer trả Host.
@@ -78,7 +82,6 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
-    // ---------- Plyr + HLS ----------
     const titleDisplay = document.getElementById('isLoad');
     const buttons = document.querySelectorAll('button[data-src]');
     const videoContainer = document.getElementById('video-container');
@@ -107,28 +110,13 @@
       hls.loadSource(src);
       hls.attachMedia(el);
       hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-        const availableQualities = data.levels.map((level, index) => ({
-          label: `${level.height}p`, value: index
-        })).reverse();
+        const availableQualities = data.levels.map((level, index) => ({ label: `${level.height}p`, value: index })).reverse();
         availableQualities.unshift({ label: 'Auto', value: -1 });
 
         player = new Plyr(el, {
-          controls: [
-            'play-large','rewind','play','fast-forward','progress','current-time','duration',
-            'mute','volume','captions','settings','fullscreen'
-          ],
-          quality: {
-            default: -1,
-            options: availableQualities.map(q => q.value),
-            forced: true,
-            onChange: (newQuality) => { hls.currentLevel = newQuality; }
-          },
-          i18n: {
-            qualityLabel: {
-              '-1': 'Auto',
-              ...Object.fromEntries(availableQualities.map(q => [q.value, q.label]))
-            }
-          },
+          controls: ['play-large','rewind','play','fast-forward','progress','current-time','duration','mute','volume','captions','settings','fullscreen'],
+          quality: { default: -1, options: availableQualities.map(q => q.value), forced: true, onChange: (newQuality) => { hls.currentLevel = newQuality; } },
+          i18n: { qualityLabel: { '-1': 'Auto', ...Object.fromEntries(availableQualities.map(q => [q.value, q.label])) } },
           captions: { active: true, update: true }
         });
 
@@ -146,13 +134,16 @@
 
     window.addEventListener("resize", CaptionsChange);
 
-    // ---------- WebRTC ----------
+    // ---------- WebRTC P2P ----------
     const connStateEl = document.getElementById('connState');
     const setConnState = (t)=> connStateEl.textContent = t;
     let pc, dc;
     let isRemoteApplying = false;
     let lastHeartbeat = 0;
     const mode = () => document.querySelector('input[name="mode"]:checked').value;
+
+    let localStream = null;
+    let remoteAudioEl = null;
 
     function newPeer(){
       if (pc) { try{pc.close()}catch{} }
@@ -161,6 +152,15 @@
       pc.onconnectionstatechange = ()=> setConnState(pc.connectionState);
       pc.ondatachannel = (e)=> { dc = e.channel; setupDC(); };
       if (mode()==='host'){ dc = pc.createDataChannel('sync'); setupDC(); }
+      pc.ontrack = (event) => {
+        if (!remoteAudioEl) {
+          remoteAudioEl = document.createElement('audio');
+          remoteAudioEl.autoplay = true;
+          remoteAudioEl.style.display = 'none';
+          document.body.appendChild(remoteAudioEl);
+        }
+        remoteAudioEl.srcObject = event.streams[0];
+      };
     }
     newPeer();
 
@@ -192,7 +192,7 @@
       });
     }
 
-    // ---- Sync events ----
+    // ---- Sync video events ----
     function broadcastLoad(src, title, sub){
       send({ t:'load', src, title, sub });
       setTimeout(()=> sendState(), 350);
@@ -254,14 +254,14 @@
       } finally { isRemoteApplying = false; }
     }
 
-    // ---- UI: chọn tập ----
+    // ---- Chọn tập ----
     buttons.forEach(button => {
       button.addEventListener('click', () => {
         const src = button.getAttribute('data-src');
         const title = button.getAttribute('data-title');
         const sub = button.getAttribute('data-sub');
         if (!src){
-          alert('Video chưa được cập nhật!\nVui lòng liên hệ Tiktok: @odaycothuyetminh để được hỗ trợ');
+          alert('Video chưa được cập nhật!');
           return;
         }
         buttons.forEach(btn => btn.classList.remove('FlashActive'));
@@ -317,6 +317,23 @@
     $('btnCopyLocal').onclick = ()=> navigator.clipboard.writeText(localSdp.value || '');
 
     function tryParse(s){ try{ return JSON.parse(s) }catch{ return null } }
+
+    // ---- Voice Chat ----
+    $('btnStartVoice').onclick = async ()=>{
+      if (!pc) return alert('Chưa có PeerConnection');
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+        alert('Voice Chat đã bật');
+      } catch (err) { alert('Không thể bật micro: '+err.message); }
+    };
+    $('btnStopVoice').onclick = ()=>{
+      if (localStream) {
+        localStream.getTracks().forEach(track=>track.stop());
+        localStream=null;
+      }
+      alert('Voice Chat đã tắt');
+    };
   </script>
 </body>
 </html>
